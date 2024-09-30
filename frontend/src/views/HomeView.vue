@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <main>
-    <h1 class="text-red-400">Hello from home</h1>
+  <main class="flex justify-center items-center">
+    <h1 class="text-red-400 text-4xl">Hello from home</h1>
   </main>
 </template>
