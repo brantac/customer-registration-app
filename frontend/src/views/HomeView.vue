@@ -2,7 +2,10 @@
 </script>
 
 <template>
-  <main class="flex justify-center items-center">
-    <h1 class="text-red-400 text-4xl">Hello from home</h1>
+  <main class="flex flex-col justify-center items-center p-4 gap-6 font-serif">
+    <h1 class="text-zinc-900 text-6xl">Welcome to <span class="text-amber-400">Calm Studio</span></h1>
+    <img src="/photography-studio-logo-camomila-illustration.jpeg" 
+      class="max-w-xs rounded-full"
+    />
   </main>
 </template>
