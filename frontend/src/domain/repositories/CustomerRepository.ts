@@ -1,9 +1,8 @@
+import type { GetAllCustomersResponse } from "@/types/CustomerApiResponse";
 import type { Customer } from "../entities/Customer";
 
-type CustomerId = string;
-
 export interface CustomerRepository {
-    register(customer: Customer): Promise<CustomerId>;
+    register(customer: Customer): Promise<string>;
     findById(id: String): Promise<Customer>;
-    getAllCustomers(): Promise<Customer[]>;
+    getAllCustomers(): Promise<GetAllCustomersResponse>;
 }

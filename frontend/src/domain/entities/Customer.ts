@@ -3,12 +3,14 @@ export class Customer {
     private _firstName: string;
     private _lastName: string;
     private _email: string;
+    private _phone: string;
 
-    constructor(firstName: string, lastName: string, email: string, id = '') {
+    constructor(firstName: string, lastName: string, email: string, id = '', phone: string) {
         this._firstName = firstName;
         this._lastName = lastName;
         this._email = email;
         this._id = id;
+        this._phone = phone;
     }
 
     get firstName() {
@@ -35,6 +37,14 @@ export class Customer {
         this._email = email;
     }
     
+    get phone() {
+        return this._phone;
+    }
+
+    set phone(phone: string) {
+        this._phone = phone;
+    }
+
     get id() {
         return this._id;
     }

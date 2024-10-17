@@ -7,14 +7,15 @@ export class CustomerApiRepository implements CustomerRepository {
         const registeredCustomer = await CustomerApi.registerCustomer({
             firstName: customer.firstName,
             lastName: customer.lastName,
-            email: customer.email
+            email: customer.email,
+            phone: customer.phone
         });
         return registeredCustomer.id;
     }
     findById(id: String): Promise<Customer> {
         throw new Error("Method not implemented.");
     }
-    getAllCustomers(): Promise<Customer[]> {
-        throw new Error("Method not implemented.");
+    async getAllCustomers() {
+        return await CustomerApi.getAllCustomers();
     }
 }
