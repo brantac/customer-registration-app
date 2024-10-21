@@ -4,7 +4,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Primeiro Nome</FormLabel>
                 <FormControl>
-                    <Input type="text" placeholder="Escreva o seu primeiro nome" v-bind="componentField"
+                    <input type="text" placeholder="Escreva o seu primeiro nome" v-bind="componentField"
                         class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
@@ -15,7 +15,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Sobrenome</FormLabel>
                 <FormControl>
-                    <Input type="text" placeholder="Escreva seu sobrenome" v-bind="componentField"
+                    <input type="text" placeholder="Escreva seu sobrenome" v-bind="componentField"
                         class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
@@ -26,7 +26,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Celular</FormLabel>
                 <FormControl>
-                    <Input type="text" placeholder="Escreva o número do seu celular" v-bind="componentField"
+                    <input type="text" placeholder="Escreva o número do seu celular" v-bind="componentField"
                         class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
@@ -37,7 +37,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                    <Input type="text" placeholder="Escreva seu email" v-bind="componentField"
+                    <input type="text" placeholder="Escreva seu email" v-bind="componentField"
                         class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />

@@ -18,4 +18,7 @@ export class CustomerApiRepository implements CustomerRepository {
     async getAllCustomers() {
         return await CustomerApi.getAllCustomers();
     }
+    async delete(customerId: string) {
+        await CustomerApi.delete(customerId);
+    }
 }

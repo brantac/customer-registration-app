@@ -1,4 +1,13 @@
 import type { GetAllCustomersResponse, RegisterCustomerResponse } from "@/types/CustomerApiResponse";
+import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
+import { ServerError } from "../errors/ServerError";
+import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
+
+interface RestErrorResponse {
+    message: string;
+    details: string;
+    status: string
+}
 
 export class CustomerApi {
     static async registerCustomer(customerData: {
@@ -42,6 +51,26 @@ export class CustomerApi {
             return await response.json();
         } catch (error) {
             throw new Error("Erro na requisição de clientes.");
+        }
+    }
+
+    static async delete(customerId: string) {
+        try {
+            const url = `http://localhost:8080/api/v1/customers/${customerId}`;
+
+            const response = await fetch(url, {
+                method: "Delete"
+            });
+            // Status === 204 --> User deleted
+            if (response.status === 204) return;
+
+            if (!response.ok) {
+                const errorData: RestErrorResponse = await response.json();
+                if (response.status === 404) throw new CustomerNotFoundError(errorData.message, errorData.details);
+                else throw new ServerError(errorData.message, errorData.details);
+            }
+        } catch (error: unknown) {
+            customerApiErrorHandler(error);
         }
     }
 }
