@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import dev.arthurbrant.backend.domain.user.Customer;
 import dev.arthurbrant.backend.dto.GetCustomerResponseDTO;
+import dev.arthurbrant.backend.dto.PatchCustomerRequestDTO;
 import dev.arthurbrant.backend.dto.RegisterRequestDTO;
 import dev.arthurbrant.backend.dto.ResponseDTO;
 import dev.arthurbrant.backend.exceptions.CustomerAlreadyExistsException;
@@ -48,5 +49,24 @@ public class CustomerService {
     public void delete(String id) {
         Customer customer = this.getCustomerById(id);
         this.repository.delete(customer);
+    }
+
+    public Customer update(String id, PatchCustomerRequestDTO dto) {
+        Customer customer = this.repository.findById(id).orElseThrow(CustomerNotFoundException::new);
+
+        if (dto.firstName() != null) {
+            customer.setFirstName(dto.firstName());
+        }
+        if (dto.lastName() != null) {
+            customer.setLastName(dto.lastName());
+        }
+        if (dto.email() != null) {
+            customer.setEmail(dto.email());
+        }
+        if (dto.phone() != null) {
+            customer.setPhone(dto.phone());
+        }
+        
+        return this.repository.save(customer);
     }
 }

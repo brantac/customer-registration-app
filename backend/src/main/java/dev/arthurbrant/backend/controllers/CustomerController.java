@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.arthurbrant.backend.domain.user.Customer;
 import dev.arthurbrant.backend.dto.GetCustomerResponseDTO;
+import dev.arthurbrant.backend.dto.PatchCustomerRequestDTO;
+import dev.arthurbrant.backend.dto.PatchCustomerResponseDTO;
 import dev.arthurbrant.backend.dto.RegisterCustomerResponseDTO;
 import dev.arthurbrant.backend.dto.RegisterRequestDTO;
 import dev.arthurbrant.backend.services.CustomerService;
@@ -65,5 +68,17 @@ public class CustomerController {
     public ResponseEntity<String> delete(@PathVariable String id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @PatchMapping("/{id}")
+    public ResponseEntity<PatchCustomerResponseDTO> patch(@PathVariable String id, @RequestBody PatchCustomerRequestDTO body) {
+        Customer customer = this.service.update(id, body);
+        return ResponseEntity.ok(new PatchCustomerResponseDTO(
+            customer.getId(),
+            customer.getFirstName(),
+            customer.getLastName(),
+            customer.getEmail(),
+            customer.getPhone()
+        ));
     }
 }
