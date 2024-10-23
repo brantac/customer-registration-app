@@ -3,7 +3,6 @@ import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundEr
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
 import { Customer } from "@/domain/entities/Customer";
-import { NetworkError } from "../errors/NetworkError";
 import { CustomerAlreadyExistsError } from "../errors/customer-api/CustomerAlreadyExistsError";
 
 interface RestErrorResponse {
@@ -51,13 +50,10 @@ export class CustomerApi {
 
             const response = await fetch(url);
 
-            if (!response.status.toString().startsWith('2')) {
-                throw new Error("Não foi possível recuperar os dados dos clientes.");
-            }
-            
-            return await response.json();
+            if(response.ok) return await response.json();
+            else throw new ServerError(`Erro no servidor: servidor respondeu com status ${response.status}`);
         } catch (error) {
-            throw new Error("Erro na requisição de clientes.");
+            throw customerApiErrorHandler(error);
         }
     }
 
