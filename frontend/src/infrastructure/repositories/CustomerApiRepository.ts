@@ -4,12 +4,7 @@ import { CustomerApi } from "../api/CustomerApi";
 
 export class CustomerApiRepository implements CustomerRepository {
     async register(customer: Customer) {
-        const registeredCustomer = await CustomerApi.registerCustomer({
-            firstName: customer.firstName,
-            lastName: customer.lastName,
-            email: customer.email,
-            phone: customer.phone
-        });
+        const registeredCustomer = await CustomerApi.registerCustomer(customer);
         return registeredCustomer.id;
     }
     findById(id: String): Promise<Customer> {

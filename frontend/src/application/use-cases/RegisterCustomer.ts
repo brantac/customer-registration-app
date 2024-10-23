@@ -4,8 +4,7 @@ import type { CustomerRepository } from "@/domain/repositories/CustomerRepositor
 export class RegisterCustomer {
     constructor(private customerRepository: CustomerRepository) {}
 
-    async execute(firstName: string, lastName: string, email: string): Promise<string> {
-        const customer = new Customer(firstName, lastName, email);
+    async execute(customer: Customer): Promise<string> {
         return await this.customerRepository.register(customer);
     }
 }

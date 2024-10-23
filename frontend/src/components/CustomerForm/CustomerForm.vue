@@ -56,14 +56,15 @@ import { Button } from "@/components/ui/button";
 import { CustomerApiRepository } from "@/infrastructure/repositories/CustomerApiRepository";
 import { RegisterCustomer } from "@/application/use-cases/RegisterCustomer";
 import { useRouter } from "vue-router";
+import { Customer } from "@/domain/entities/Customer";
 
 const router = useRouter();
 
 const customerSchema = toTypedSchema(z.object({
-    firstName: z.string().min(2, "Primeiro nome deve ter no mínimo 2 caracteres").max(20),
-    lastName: z.string().min(2, "Sobrenome deve ter no mínimo 2 caracteres").max(150),
+    firstName: z.string().min(1, "Primeiro nome deve ter no mínimo 1 caracteres").max(30),
+    lastName: z.string().min(1, "Sobrenome deve ter no mínimo 1 caracteres").max(150),
     phone: z.string().min(11).max(11),
-    email: z.string().email("Email inválido"),
+    email: z.string().email("Email inválido").optional(),
 }));
 
 const form = useForm({
@@ -73,7 +74,13 @@ const form = useForm({
 const onSubmit = form.handleSubmit(async (values) => {
     const customerRepository = new CustomerApiRepository();
     const registerCustomer = new RegisterCustomer(customerRepository);
-    await registerCustomer.execute(values.firstName, values.lastName, values.email);
+    const newCustomer: Customer = new Customer({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+        email: values.email
+    });
+    await registerCustomer.execute(newCustomer);
     router.push('/customers');
 })
 </script>
