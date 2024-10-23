@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.arthurbrant.backend.domain.user.Customer;
-import dev.arthurbrant.backend.dto.GetCustomerResponseDTO;
+import dev.arthurbrant.backend.dto.CustomerDTO;
 import dev.arthurbrant.backend.dto.PatchCustomerRequestDTO;
 import dev.arthurbrant.backend.dto.PatchCustomerResponseDTO;
 import dev.arthurbrant.backend.dto.RegisterCustomerResponseDTO;
 import dev.arthurbrant.backend.dto.RegisterRequestDTO;
+import dev.arthurbrant.backend.mappers.CustomerMapper;
 import dev.arthurbrant.backend.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 
@@ -27,30 +28,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService service;
+    private final CustomerMapper customerMapper;
 
     @GetMapping
-    public ResponseEntity<List<GetCustomerResponseDTO>> getCustomers() {
+    public ResponseEntity<List<CustomerDTO>> getCustomers() {
         List<Customer> customers = this.service.getAllCustomers();
-        List<GetCustomerResponseDTO> customerDTOs = customers.stream()
-            .map(customer -> new GetCustomerResponseDTO(
-                customer.getId(),
-                customer.getFirstName(),
-                customer.getLastName(),
-                customer.getEmail()
-            ))
+        List<CustomerDTO> customerDTOs = customers.stream()
+            .map(customerMapper::toDto)
             .toList();
         return ResponseEntity.ok(customerDTOs);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GetCustomerResponseDTO> getCustomer(@PathVariable String id) {
+    public ResponseEntity<CustomerDTO> getCustomer(@PathVariable String id) {
         Customer customer = this.service.getCustomerById(id);
-        return ResponseEntity.ok(new GetCustomerResponseDTO(
-            customer.getId(),
-            customer.getFirstName(),
-            customer.getLastName(),
-            customer.getEmail()
-        ));
+        return ResponseEntity.ok(customerMapper.toDto(customer));
     }
 
     @PostMapping()
