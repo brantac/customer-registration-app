@@ -1,16 +1,24 @@
+interface CustomerInitObj {
+    id?: string,
+    email?: string,
+    firstName: string,
+    lastName: string,
+    phone: string
+}
+
 export class Customer {
-    private _id: string;
+    private _id?: string;
+    private _email?: string;
     private _firstName: string;
     private _lastName: string;
-    private _email: string;
     private _phone: string;
 
-    constructor(firstName: string, lastName: string, email: string, id = '', phone: string) {
-        this._firstName = firstName;
-        this._lastName = lastName;
-        this._email = email;
-        this._id = id;
-        this._phone = phone;
+    constructor(init: CustomerInitObj) {
+        this._id = init.id;
+        this._firstName = init.firstName;
+        this._lastName = init.lastName;
+        this._email = init.email;
+        this._phone = init.phone;
     }
 
     get firstName() {
@@ -29,7 +37,7 @@ export class Customer {
         this._lastName = lastName;
     }
     
-    get email() {
+    get email(): string | undefined {
         return this._email;
     }
 
@@ -45,7 +53,7 @@ export class Customer {
         this._phone = phone;
     }
 
-    get id() {
+    get id(): string | undefined {
         return this._id;
     }
 
