@@ -1,8 +1,7 @@
-import type { CustomerType, GetAllCustomersResponse, RegisterCustomerRequestType, RegisterCustomerResponseType, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
+import type { GetCustomersResponse, RegisterCustomerRequest, RegisterCustomerResponse, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
 import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
-import { Customer } from "@/domain/entities/Customer";
 import { CustomerAlreadyExistsError } from "../errors/customer-api/CustomerAlreadyExistsError";
 
 interface RestErrorResponse {
@@ -12,7 +11,7 @@ interface RestErrorResponse {
 }
 
 export class CustomerApi {
-    static async registerCustomer(newCustomer: Customer): Promise<RegisterCustomerResponseType> {
+    static async registerCustomer(newCustomer: RegisterCustomerRequest): Promise<RegisterCustomerResponse> {
         try {
             const url = 'http://localhost:8080/api/v1/customers';
             const myHeaders = new Headers();
@@ -44,7 +43,7 @@ export class CustomerApi {
         }
     }
 
-    static async getAllCustomers(): Promise<GetAllCustomersResponse> {
+    static async getAllCustomers(): Promise<GetCustomersResponse> {
         try {
             const url = 'http://localhost:8080/api/v1/customers';
 
