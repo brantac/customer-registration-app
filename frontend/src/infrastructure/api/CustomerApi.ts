@@ -1,7 +1,10 @@
-import type { GetAllCustomersResponse, RegisterCustomerResponse } from "@/types/CustomerApiResponse";
+import type { GetAllCustomersResponse, RegisterCustomerRequestType, RegisterCustomerResponseType } from "@/types/CustomerApiResponse";
 import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
+import { Customer } from "@/domain/entities/Customer";
+import { NetworkError } from "../errors/NetworkError";
+import { CustomerAlreadyExistsError } from "../errors/customer-api/CustomerAlreadyExistsError";
 
 interface RestErrorResponse {
     message: string;
@@ -10,12 +13,7 @@ interface RestErrorResponse {
 }
 
 export class CustomerApi {
-    static async registerCustomer(customerData: {
-        firstName: string,
-        lastName: string,
-        email: string,
-        phone: string
-    }): Promise<RegisterCustomerResponse> {
+    static async registerCustomer(newCustomer: Customer): Promise<RegisterCustomerResponseType> {
         try {
             const url = 'http://localhost:8080/api/v1/customers';
             const myHeaders = new Headers();
@@ -23,18 +21,27 @@ export class CustomerApi {
             const request = new Request(url, {
                 method: 'POST',
                 headers: myHeaders,
-                body: JSON.stringify(customerData),
+                body: JSON.stringify({
+                    firstName: newCustomer.firstName,
+                    lastName: newCustomer.lastName,
+                    email: newCustomer.email,
+                    phone: newCustomer.phone,
+                }),
             });
 
             const response = await fetch(request);
 
-            if (!response.status.toString().startsWith('2')) {
-                throw new Error("Não foi possível registrar a(o) cliente " + customerData.firstName);
+            if (response.ok) return await response.json();            
+            else {
+                const errorData: RestErrorResponse = await response.json();
+                // Status === 409 --> Conflict (CREATE THIS ERROR TYPE)
+                if (response.status === 409) {
+                    throw new CustomerAlreadyExistsError(errorData.message, errorData.details, errorData.status);
+                }
+                else throw new ServerError(errorData.message, errorData.details);
             }
-            
-            return await response.json();
-        } catch (error) {
-            throw new Error("Erro na requisição de clientes.");
+        } catch (error: unknown) {
+            throw customerApiErrorHandler(error);
         }
     }
 
@@ -71,6 +78,37 @@ export class CustomerApi {
             }
         } catch (error: unknown) {
             customerApiErrorHandler(error);
+        }
+    }
+
+    static async updateCustomer(customerData: {
+        firstName?: string,
+        lastName?: string,
+        email?: string,
+        phone?: string
+    }): Promise<UpdateCustomerResponse> {
+        try {
+            const url = 'http://localhost:8080/api/v1/customers';
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            const request = new Request(url, {
+                method: 'PUT',
+                headers: myHeaders,
+                body: JSON.stringify(customerData),
+            });
+
+            const response = await fetch(request);
+
+            // Status === 204 --> User deleted
+            if (response.ok) return response.json() as UpdateCustomerResponse;
+            else {
+                const errorData: RestErrorResponse = await response.json();
+                if (response.status === 404) throw new CustomerNotFoundError(errorData.message, errorData.details);
+                // Add checks for 400: Bad Request, 409: Conflict
+                else throw new ServerError(errorData.message, errorData.details);
+            }
+        } catch (error: unknown) {
+            throw customerApiErrorHandler(error);
         }
     }
 }

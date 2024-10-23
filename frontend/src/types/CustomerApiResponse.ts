@@ -1,7 +1,14 @@
-import type { Customer } from "@/domain/entities/Customer";
+export type CustomerType = {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+}
 
-export type CustomerType = Omit<Customer, 'phone'> & Partial<Pick<Customer, 'phone'>>;
+export type CustomerResponseType = Omit<CustomerType, 'email'> & Partial<Pick<CustomerType, 'email'>>;
 
-export type RegisterCustomerResponse = CustomerType;
+export type RegisterCustomerRequestType = Omit<CustomerType, 'email' | 'id'> & Partial<Pick<CustomerType, 'email' | 'id'>>;
+export type RegisterCustomerResponseType = CustomerResponseType;
 
-export type GetAllCustomersResponse = CustomerType[];
+export type GetAllCustomersResponse = CustomerResponseType[];
