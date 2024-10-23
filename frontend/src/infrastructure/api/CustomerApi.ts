@@ -1,4 +1,4 @@
-import type { GetAllCustomersResponse, RegisterCustomerRequestType, RegisterCustomerResponseType } from "@/types/CustomerApiResponse";
+import type { CustomerType, GetAllCustomersResponse, RegisterCustomerRequestType, RegisterCustomerResponseType, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
 import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
@@ -77,12 +77,7 @@ export class CustomerApi {
         }
     }
 
-    static async updateCustomer(customerData: {
-        firstName?: string,
-        lastName?: string,
-        email?: string,
-        phone?: string
-    }): Promise<UpdateCustomerResponse> {
+    static async update(customerData: UpdateCustomerRequest): Promise<UpdateCustomerResponse> {
         try {
             const url = 'http://localhost:8080/api/v1/customers';
             const myHeaders = new Headers();
@@ -95,12 +90,17 @@ export class CustomerApi {
 
             const response = await fetch(request);
 
-            // Status === 204 --> User deleted
-            if (response.ok) return response.json() as UpdateCustomerResponse;
+            // Status === 200 --> User updated
+            if (response.ok) {
+                return await response.json() as UpdateCustomerResponse;
+            }
             else {
                 const errorData: RestErrorResponse = await response.json();
                 if (response.status === 404) throw new CustomerNotFoundError(errorData.message, errorData.details);
-                // Add checks for 400: Bad Request, 409: Conflict
+                // Add checks for 400: Bad Request
+                else if (response.status === 409) {
+                    throw new CustomerAlreadyExistsError(errorData.message, errorData.details, errorData.status);
+                }
                 else throw new ServerError(errorData.message, errorData.details);
             }
         } catch (error: unknown) {

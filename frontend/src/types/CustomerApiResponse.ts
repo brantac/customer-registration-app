@@ -1,14 +1,21 @@
-export type CustomerType = {
-    id: string;
-    email: string;
+export interface CustomerType {
+    id?: string;
+    email?: string;
     firstName: string;
-    lastName: string;
+    lastName?: string;
     phone: string;
 }
 
-export type CustomerResponseType = Omit<CustomerType, 'email'> & Partial<Pick<CustomerType, 'email'>>;
+// type CustomerTypeNonRequiredFields = "id" | "email" | "lastName";
 
-export type RegisterCustomerRequestType = Omit<CustomerType, 'email' | 'id'> & Partial<Pick<CustomerType, 'email' | 'id'>>;
-export type RegisterCustomerResponseType = CustomerResponseType;
+export type GetCustomerRequest = Required<Pick<CustomerType, 'id'>>;
+export type GetCustomerResponse = Omit<CustomerType, "id"> & Required<Pick<CustomerType, "id">>;
 
-export type GetAllCustomersResponse = CustomerResponseType[];
+export type RegisterCustomerRequest = CustomerType;
+export type RegisterCustomerResponse = GetCustomerResponse;
+
+export type GetCustomersResponse = GetCustomerResponse[];
+
+
+export type UpdateCustomerRequest = CustomerType & GetCustomerRequest;
+export type UpdateCustomerResponse = GetCustomerResponse;
