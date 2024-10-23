@@ -16,4 +16,7 @@ export class CustomerApiRepository implements CustomerRepository {
     async delete(customerId: string) {
         await CustomerApi.delete(customerId);
     }
+    async update({ id, firstName, lastName, email, phone }: Customer) {
+        return await CustomerApi.update({ id: id as string, firstName, lastName, email, phone });
+    }
 }
