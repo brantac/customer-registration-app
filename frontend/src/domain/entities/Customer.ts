@@ -2,7 +2,7 @@ interface CustomerInitObj {
     id?: string,
     email?: string,
     firstName: string,
-    lastName: string,
+    lastName?: string,
     phone: string
 }
 
@@ -10,7 +10,7 @@ export class Customer {
     private _id?: string;
     private _email?: string;
     private _firstName: string;
-    private _lastName: string;
+    private _lastName?: string;
     private _phone: string;
 
     constructor(init: CustomerInitObj) {
@@ -29,7 +29,7 @@ export class Customer {
         this._firstName = firstName;
     }
     
-    get lastName() {
+    get lastName(): string | undefined {
         return this._lastName;
     }
 
