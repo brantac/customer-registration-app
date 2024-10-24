@@ -24,6 +24,6 @@ public class CustomerMapper {
             customerDto.lastName(),
             customerDto.email(),
             customerDto.phone()
-        )
+        );
     }
 }
