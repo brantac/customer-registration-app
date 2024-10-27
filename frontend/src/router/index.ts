@@ -6,21 +6,30 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'DefaultLayout',
+      name: 'default-layout',
       component: DefaultLayout,
-      children: [{
-        path: '',
-        name: 'Home',
-        component: () => import('../views/HomeView.vue')
-      }, {
-        path: 'customers',
-        name: 'Customers',
-        component: () => import('../views/CustomersView.vue')
-      }, {
-        path: 'customers/registration',
-        name: 'registration',
-        component: () => import('../views/CustomerRegistrationView.vue')
-      }]
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('../views/HomeView.vue')
+        },
+        {
+          path: 'customers',
+          name: 'customers',
+          component: () => import('../views/CustomersView.vue'),
+        },
+        {
+          path: 'customers/registration',
+          name: 'customer-registration',
+          component: () => import('../views/Customers/CustomerRegistrationView.vue')
+        },
+        {
+          path: 'customers/:id',
+          name: 'customer',
+          component: () => import('../views/Customers/CustomerView.vue')
+        },
+      ]
     }
   ]
 })
