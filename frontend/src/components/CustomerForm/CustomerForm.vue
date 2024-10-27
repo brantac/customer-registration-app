@@ -4,7 +4,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Primeiro Nome</FormLabel>
                 <FormControl>
-                    <input type="text" placeholder="Escreva o seu primeiro nome" v-bind="componentField"
+                    <input :disabled="isInputDisabled" v-model="formValues.firstName" type="text" placeholder="Escreva o seu primeiro nome" v-bind="componentField"
                         class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
@@ -15,8 +15,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Sobrenome</FormLabel>
                 <FormControl>
-                    <input type="text" placeholder="Escreva seu sobrenome" v-bind="componentField"
-                        class="px-4 py-2" />
+                    <input :disabled="isInputDisabled" v-model="formValues.lastName" type="text" placeholder="Escreva seu sobrenome" v-bind="componentField" class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
             </FormItem>
@@ -26,8 +25,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Celular</FormLabel>
                 <FormControl>
-                    <input type="text" placeholder="Escreva o número do seu celular" v-bind="componentField"
-                        class="px-4 py-2" />
+                    <input :disabled="isInputDisabled" v-model="formValues.phone" type="text" placeholder="Escreva o número do seu celular" v-bind="componentField" class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
             </FormItem>
@@ -37,8 +35,7 @@
             <FormItem class="flex flex-col">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                    <input type="text" placeholder="Escreva seu email" v-bind="componentField"
-                        class="px-4 py-2" />
+                    <input :disabled="isInputDisabled" v-model="formValues.email" type="text" placeholder="Escreva seu email" v-bind="componentField" class="px-4 py-2" />
                 </FormControl>
                 <FormMessage />
             </FormItem>
@@ -50,37 +47,45 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import * as z from "zod";
+import { z } from "zod";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { CustomerApiRepository } from "@/infrastructure/repositories/CustomerApiRepository";
-import { RegisterCustomer } from "@/application/use-cases/RegisterCustomer";
-import { useRouter } from "vue-router";
-import { Customer } from "@/domain/entities/Customer";
+import { useRoute } from "vue-router";
+import { computed, ref, toRefs, watch } from "vue";
 
-const router = useRouter();
+const route = useRoute();
 
-const customerSchema = toTypedSchema(z.object({
-    firstName: z.string().min(1, "Primeiro nome deve ter no mínimo 1 caracteres").max(30),
-    lastName: z.string().min(1, "Sobrenome deve ter no mínimo 1 caracteres").max(150),
-    phone: z.string().min(11).max(11),
+const isInputDisabled = computed(() => route.name !== 'customer-registration');
+
+const CustomerSchema = z.object({
+    firstName: z.string().min(2, "Pelo menos 2 caracteres").max(30),
+    lastName: z.string().min(2, "Pelo menos 2 caracteres").max(150).optional(),
+    phone: z.string().max(11),
     email: z.string().email("Email inválido").optional(),
-}));
-
+});
+const customerFormSchema = toTypedSchema(CustomerSchema);
 const form = useForm({
-    validationSchema: customerSchema,
-})
+    validationSchema: customerFormSchema,
+});
+
+// Get the typescript type from zod schema
+type CustomerFormType = z.infer<typeof CustomerSchema>;
+// Define the component props
+const props = defineProps<{ initialCustomerData: CustomerFormType }>();
+// Turn all the props properties into ref properties
+const { initialCustomerData } = toRefs(props);
+// Set the props passed as the inital value of the inputs
+const formValues = ref({...initialCustomerData.value});
+// Watch for updates on customer data
+watch(initialCustomerData, (newData) => {
+    formValues.value = { ...newData };
+});
+
+const emit = defineEmits<{
+    submit: [value: CustomerFormType]
+}>();
 
 const onSubmit = form.handleSubmit(async (values) => {
-    const customerRepository = new CustomerApiRepository();
-    const registerCustomer = new RegisterCustomer(customerRepository);
-    const newCustomer: Customer = new Customer({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phone: values.phone,
-        email: values.email
-    });
-    await registerCustomer.execute(newCustomer);
-    router.push('/customers');
-})
+    emit('submit', formValues.value);
+});
 </script>
