@@ -17,17 +17,17 @@ const router = createRouter({
         {
           path: 'customers',
           name: 'customers',
-          component: () => import('../views/CustomersView.vue'),
+          component: () => import('../views/Customers/IndexView.vue'),
         },
         {
           path: 'customers/registration',
           name: 'customer-registration',
-          component: () => import('../views/Customers/CustomerRegistrationView.vue')
+          component: () => import('../views/Customers/RegistrationView.vue')
         },
         {
           path: 'customers/:id',
           name: 'customer',
-          component: () => import('../views/Customers/CustomerView.vue')
+          component: () => import('../views/Customers/[id]/CustomerView.vue')
         },
       ]
     }
