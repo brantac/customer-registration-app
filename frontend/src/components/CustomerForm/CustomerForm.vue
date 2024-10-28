@@ -82,10 +82,10 @@ watch(initialCustomerData, (newData) => {
 });
 
 const emit = defineEmits<{
-    submit: [value: CustomerFormType]
+    submitForm: [value: CustomerFormType]
 }>();
 
 const onSubmit = form.handleSubmit(async (values) => {
-    emit('submit', formValues.value);
+    emit('submitForm', formValues.value);
 });
 </script>
