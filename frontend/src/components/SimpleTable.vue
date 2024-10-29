@@ -4,6 +4,7 @@ import { Button as ShadcnButton} from '@/components/ui/button'
 import DeleteIcon from './icons/DeleteIcon.vue';
 import type { GetAllCustomersResponse } from '@/types/CustomerApiResponse';
 import EditIcon from './icons/EditIcon.vue';
+import { customRef } from 'vue';
 
 defineProps<{
   tableData?: GetAllCustomersResponse
@@ -35,7 +36,7 @@ const clickDeleteButton = (customerId: string) => {
             <TableCell>{{ customer.email }}</TableCell>
             <TableCell>{{ customer.phone }}</TableCell>
             <TableCell>
-              <ShadcnButton class=""><EditIcon class="w-6 h-6" /></ShadcnButton>
+              <ShadcnButton class=""><RouterLink :to="{name: 'customer', params: {id: customer.id}}"><EditIcon class="w-6 h-6" /></RouterLink></ShadcnButton>
               <ShadcnButton @click="clickDeleteButton(customer.id)" class="ml-2"><DeleteIcon class="w-6 h-6" /></ShadcnButton>
             </TableCell>
           </TableRow>
