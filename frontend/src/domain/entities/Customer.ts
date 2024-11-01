@@ -1,17 +1,12 @@
-interface CustomerInitObj {
-    id?: string,
-    email?: string,
-    firstName: string,
-    lastName?: string,
-    phone: string
-}
+import type { CustomerData, CustomerInitObj } from "@/types/CustomerData";
+
 
 export class Customer {
-    private _id?: string;
-    private _email?: string;
-    private _firstName: string;
-    private _lastName?: string;
-    private _phone: string;
+    private readonly _id: string;
+    private readonly _email: string;
+    private readonly _firstName: string;
+    private readonly _lastName?: string;
+    private readonly _phone: string;
 
     constructor(init: CustomerInitObj) {
         this._id = init.id;
@@ -21,44 +16,34 @@ export class Customer {
         this._phone = init.phone;
     }
 
-    get firstName() {
-        return this._firstName;
+    public data(): CustomerData {
+        return {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            phone: this.phone,
+        }
     }
 
-    set firstName(firstName: string) {
-        this._firstName = firstName;
+    get firstName() {
+        return this._firstName;
     }
     
     get lastName(): string | undefined {
         return this._lastName;
     }
-
-    set lastName(lastName: string) {
-        this._lastName = lastName;
-    }
     
-    get email(): string | undefined {
+    get email(): string {
         return this._email;
-    }
-
-    set email(email: string) {
-        this._email = email;
     }
     
     get phone() {
         return this._phone;
     }
 
-    set phone(phone: string) {
-        this._phone = phone;
-    }
-
-    get id(): string | undefined {
+    get id(): string {
         return this._id;
-    }
-
-    set id(id: string) {
-        this._id = id;
     }
     
 }
