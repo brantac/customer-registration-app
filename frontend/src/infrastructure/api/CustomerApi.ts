@@ -91,11 +91,11 @@ export class CustomerApi {
 
     static async update(customerData: UpdateCustomerRequest): Promise<UpdateCustomerResponse> {
         try {
-            const url = 'http://localhost:8080/api/v1/customers';
+            const url = `http://localhost:8080/api/v1/customers/${customerData.id}`;
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             const request = new Request(url, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: myHeaders,
                 body: JSON.stringify(customerData),
             });
