@@ -1,4 +1,4 @@
-import type { GetCustomersResponse, RegisterCustomerRequest, RegisterCustomerResponse, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
+import type { GetCustomerResponse, GetCustomersResponse, RegisterCustomerRequest, RegisterCustomerResponse, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
 import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
@@ -39,6 +39,19 @@ export class CustomerApi {
                 else throw new ServerError(errorData.message, errorData.details);
             }
         } catch (error: unknown) {
+            throw customerApiErrorHandler(error);
+        }
+    }
+
+    static async getCustomer(customerId: string): Promise<GetCustomerResponse> {
+        try {
+            const url = `http://localhost:8080/api/v1/customers/${customerId}`;
+
+            const response = await fetch(url);
+
+            if(response.ok) return await response.json();
+            else throw new ServerError(`Erro no servidor: servidor respondeu com status ${response.status}`);
+        } catch (error) {
             throw customerApiErrorHandler(error);
         }
     }
