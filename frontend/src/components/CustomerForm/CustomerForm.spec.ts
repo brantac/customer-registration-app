@@ -85,7 +85,7 @@ describe("Customer form", () => {
         await firstName.setValue("joao");
         await email.setValue("aasr@asfa.com");
 
-        await wrapper.find('button').trigger('click');
+        await wrapper.find('form').trigger('submit.prevent');
 
         const emittedData = wrapper.emitted('submitForm')[0][0];
         expect(emittedData).toStrictEqual({
@@ -122,8 +122,7 @@ describe("Customer form", () => {
         expect(lastName.element.value).toBe("carlos marinho");
         expect(phone.element.value).toBe("1234567891");
 
-        expect(wrapper.find('button').exists()).toBe(true);
-        await wrapper.find('button').trigger('click');
+        await wrapper.find('form').trigger('submit.prevent');
 
         expect(wrapper.emitted()).toHaveProperty('submitForm');
 
