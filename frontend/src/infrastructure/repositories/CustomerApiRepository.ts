@@ -1,11 +1,12 @@
-import type { Customer } from "@/domain/entities/Customer";
+import { Customer } from "@/domain/entities/Customer";
 import type { CustomerRepository } from "@/domain/repositories/CustomerRepository";
 import { CustomerApi } from "../api/CustomerApi";
+import type { CustomerData } from "@/types/CustomerData";
 
 export class CustomerApiRepository implements CustomerRepository {
-    async register({ firstName, lastName, email, phone }: Customer) {
-        const registeredCustomer = await CustomerApi.registerCustomer({firstName, lastName, email, phone});
-        return registeredCustomer.id;
+    async register(newCustomer: CustomerData) {
+        const registeredCustomer = await CustomerApi.registerCustomer(newCustomer);
+        return new Customer(registeredCustomer);
     }
     async findById(id: string) {
         return await CustomerApi.getCustomer(id);

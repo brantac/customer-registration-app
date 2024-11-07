@@ -1,10 +1,10 @@
-import { Customer } from "@/domain/entities/Customer";
 import type { CustomerRepository } from "@/domain/repositories/CustomerRepository";
+import type { CustomerData } from "@/types/CustomerData";
 
 export class RegisterCustomer {
     constructor(private customerRepository: CustomerRepository) {}
 
-    async execute(customer: Customer): Promise<string> {
+    async execute(customer: CustomerData) {
         return await this.customerRepository.register(customer);
     }
 }
