@@ -1,14 +1,6 @@
-import { mount, VueWrapper } from "@vue/test-utils"
-import { beforeEach, describe, expect, test } from "vitest"
+import { mount } from "@vue/test-utils"
+import { describe, expect, test } from "vitest"
 import CustomerForm from "./CustomerForm.vue";
-
-type CustomerFormType = {
-    firstName: string;
-    phone: string;
-    email: string;
-    id: string;
-    lastName?: string;
-}
 
 describe("Customer form", () => {
     test("fill input values coming from props", () => {
