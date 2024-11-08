@@ -3,10 +3,11 @@ import { CustomerNotFoundError } from "../customer-api/CustomerNotFoundError";
 import { NetworkError } from "../NetworkError";
 import { ServerError } from "../ServerError";
 
+// Include: 400 BAD REQUEST
 export type CustomerApiError = 
-    | CustomerNotFoundError 
-    | ServerError 
-    | CustomerAlreadyExistsError 
+    | CustomerNotFoundError // 404: NOT FOUND
+    | ServerError // 500: SERVER ERROR
+    | CustomerAlreadyExistsError // 409: CONFLICT
     | NetworkError;
 
 export function customerApiErrorHandler(error: unknown): CustomerApiError {
