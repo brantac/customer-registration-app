@@ -1,11 +1,11 @@
 import { Customer } from "@/domain/entities/Customer";
 import type { CustomerRepository } from "@/domain/repositories/CustomerRepository";
+import type { CustomerData } from "@/types/CustomerData";
 
 export class UpdateCustomerUseCase {
     constructor(private customerRepository: CustomerRepository) {}
 
-    async execute(customer: Customer): Promise<Customer> {
-        const response = await this.customerRepository.update(customer);
-        return new Customer(response);
+    async execute(customer: CustomerData) {
+        return await this.customerRepository.update(new Customer(customer));
     }
 }
