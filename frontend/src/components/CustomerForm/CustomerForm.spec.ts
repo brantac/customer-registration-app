@@ -95,7 +95,7 @@ describe("Customer form", () => {
             id: "",
             phone: "123456789"
         });
-    })
+    });
 
     test("emit updated customer data", async () => {
         const wrapper = mount(CustomerForm, {
@@ -135,4 +135,77 @@ describe("Customer form", () => {
         });
     });
     
+    test("show errors on invalid input", async () => {
+        const wrapper = mount(CustomerForm, {
+            props: {
+                // all initial customer data is empty
+                initialCustomerData: {
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    id: "",
+                    phone: ""
+                },
+                isInputDisabled: false
+            }
+        });
+
+        const firstName = wrapper.find('input[name="firstName"]');
+        const lastName = wrapper.find('input[name="lastName"]');
+        const phone = wrapper.find('input[name="phone"]');
+        const email = wrapper.find('input[name="email"]');
+
+        await firstName.setValue("carlos asfasfasfhb kjahsfasfhasf ojhnajsfajsf jkajsfnasfbhabsf akjasjfbahsfahsbfahsb kjasfhabsfhabshfab kjahsfabsfhabskfha ajksfabshfbahsbfahsbfafbka abkjfbaskjfbasfbahsfb kajsbfkasbf");
+        await lastName.setValue("c");
+        await phone.setValue("1234567892412412");
+        await email.setValue("aasr@");
+
+        await firstName.trigger("blur");
+        await lastName.trigger("blur");
+        await email.trigger("blur");
+        await phone.trigger("blur");
+
+        // Look for error messages displayed
+        const firstNameError = wrapper.find("span[data-test-error='firstName'");
+        const lastNameError = wrapper.find("span[data-test-error='lastName'");
+        const phoneError = wrapper.find("span[data-test-error='phone'");
+        const emailError = wrapper.find("span[data-test-error='email'");
+
+        expect(firstNameError.text()).toContain("Máximo de 30 caracteres");
+        expect(lastNameError.text()).toContain("Pelo menos 2 caracteres");
+        expect(emailError.text()).toContain("Email inválido");
+        expect(phoneError.text()).toContain("Máximo de 11 números");
+    });
+
+    test("dont allow submit form on invalid inputs", async () => {
+        const wrapper = mount(CustomerForm, {
+            props: {
+                initialCustomerData: {
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                },
+                isInputDisabled: true,
+            }
+        });
+
+        // Write input values
+        const firstName = wrapper.find("input[name='firstName']");
+        const lastName = wrapper.find("input[name='lastName']");
+        const email = wrapper.find("input[name='email']");
+        const phone = wrapper.find("input[name='phone']");
+
+        firstName.setValue("maria");
+        lastName.setValue("clara");
+        email.setValue("");
+        phone.setValue("231215467897456");
+
+        // Try to submit form
+        await wrapper.find('form').trigger('submit');
+
+        expect(wrapper.emitted()).not.toHaveProperty("submitForm");
+    });
+
+    test.todo("dont allow update when edit is disabled");
 });

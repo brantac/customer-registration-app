@@ -1,9 +1,19 @@
 <template>
     <form @submit.prevent="onSubmit" class="h-full grid grid-cols-2 justify-center content-center gap-4">
         <template v-for="(value, key) in formValues" :key="key">
-            <div v-if="key !== 'id'" class="form-field">
-                <label :for="key">{{ formDetails[key]?.label }}</label>
-                <input v-model="formValues[key]" type="text" :id="key" :name="key" :placeholder="formDetails[key]?.placeholder" :disabled="isInputDisabled" class="px-4 py-2" />
+            <div v-if="key !== 'id'" class="form-field relative w-full flex flex-col">
+                <label 
+                :class="[!errors[key] ? 'tex-zinc-500' : 'text-red-500']"
+                :for="key">{{ formDetails[key]?.label }}</label>
+                <input
+                :class="['px-4 py-2 border rounded', errors[key] ? 'border-red-500' : 'border-zinc-200']"
+                v-model="formValues[key]"
+                type="text"
+                :id="key"
+                :name="key"
+                :placeholder="formDetails[key]?.placeholder" :disabled="isInputDisabled"
+                @blur="validateFormField(key)"/>
+                <span :data-test-error="key" class="text-red-500 text-sm">{{ errors[key] }}</span>
             </div>
         </template>
         <Button class="col-start-1 col-end-2" type="submit">Registrar</Button>
@@ -14,6 +24,8 @@
 import { Button } from "@/components/ui/button";
 import { ref, toRefs } from "vue";
 import type { CustomerFormType } from "@/validation/CustomerSchema";
+import { validateForm } from "@/validation/validate-form";
+import { validateField } from "@/validation/validate-field";
 
 interface FieldDetails {
     placeholder: string;
@@ -24,6 +36,7 @@ type FormDetails = {
     [K in keyof CustomerFormType]: FieldDetails
 }
 
+const errors = ref<Record<string, string>>({});
 const formDetails  = ref<FormDetails>({
     firstName: {
         placeholder: "Escreva seu primeiro",
@@ -59,6 +72,31 @@ const { initialCustomerData } = toRefs(props);
 const formValues = ref({...initialCustomerData.value});
 
 const onSubmit = () => {
-    emit('submitForm', formValues.value);
-}
+    if (isFormValid()) {
+        emit('submitForm', formValues.value);
+    }
+};
+
+const validateFormField = (key: string) => {
+    const error = validateField(formValues.value, key as keyof CustomerFormType);
+
+    if (error) {
+        errors.value[key] = error;
+    }
+    else {
+        delete errors.value[key];
+    }
+};
+
+const isFormValid = () => {
+    const [isValid, formErrors] = validateForm(formValues.value);
+
+    if (isValid) {
+        return true;
+    }
+    else {
+        errors.value = formErrors;
+        return false;
+    }
+};
 </script>
