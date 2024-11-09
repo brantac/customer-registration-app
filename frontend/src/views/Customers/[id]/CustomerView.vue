@@ -1,42 +1,54 @@
 <template>
     <div id="customer-view">
-        <h1>{{ id }}</h1>
-        <CustomerForm :initial-customer-data="customerData" @submit="registerCustomer" />
+        <h1 class="text-xl font-medium">{{ customerData ? `${customerData.firstName} ${customerData.lastName}` : customerId }}</h1>
+        <Button @click="toggleInputDisabled">{{ isInputDisabled ? "Habilitar edição" : "Desabilitar edição" }}</Button>
+        <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :is-input-disabled="isInputDisabled"/>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { RegisterCustomer } from '@/application/use-cases/RegisterCustomer';
 import CustomerForm from '@/components/CustomerForm/CustomerForm.vue';
-import { Customer } from '@/domain/entities/Customer';
 import { CustomerApiRepository } from '@/infrastructure/repositories/CustomerApiRepository';
 import { onMounted, ref } from 'vue';
+import { UpdateCustomerUseCase } from '@/application/use-cases/UpdateCustomerUseCase';
+import { GetCustomerUseCase } from '@/application/use-cases/GetCustomerUseCase';
+import { Button } from '@/components/ui/button';
+import type { CustomerData } from '@/types/CustomerData';
 
 const route = useRoute();
-const id = route.params.id;
+const customerId = route.params.id as string;
+const customerData = ref<CustomerData | null>(null);
+const isInputDisabled = ref(true);
 
-const customerData = ref({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
+// Initialize Customer Repository
+const repository = new CustomerApiRepository();
+
+// Fetch Customer Data When Page Load
+onMounted(async () => {
+    const getCustomerUseCase = new GetCustomerUseCase(repository);
+    const customer = await getCustomerUseCase.execute(customerId);
+    customerData.value = customer.data();
 });
 
-onMounted(() => {
-    // Requisitar dados do cliente e armazenar em 'customerData.value'
-})
-
-const registerCustomer = async (values: any) => {
-    customerData.value = {...values};
-    const customerRepository = new CustomerApiRepository();
-    const registerCustomerUseCase = new RegisterCustomer(customerRepository);
-    const newCustomer: Customer = new Customer({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        phone: values.phone,
-        email: values.email
-    });
-    await registerCustomerUseCase.execute(newCustomer);
+const updateCustomer = async (values: any) => {
+    toggleInputDisabled();
+    const updateCustomerUseCase = new UpdateCustomerUseCase(repository);
+    try {
+        const response = await updateCustomerUseCase.execute({
+            id: values.id,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            phone: values.phone,
+            email: values.email
+        });
+        customerData.value = response;
+    } catch (error: any) {
+        throw new Error("Erro ao enviar alterações dos dados do cliente");
+    }
 };
+
+const toggleInputDisabled = () => {
+    isInputDisabled.value = !isInputDisabled.value;
+}
 </script>
