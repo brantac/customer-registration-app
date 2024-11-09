@@ -20,7 +20,10 @@ This is a CRUD project that I used to improve my skils with Java and Spring Boot
 - ✔ Update customer
 - ✔ View customer
 - ✔ Form validation
+<<<<<<< HEAD
 - [✔] Front-end testing
+=======
+>>>>>>> bcff78c9853ed414bed40d9b11bcb6d61712b089
 
 ## How to start
 
