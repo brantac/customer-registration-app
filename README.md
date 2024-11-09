@@ -1,9 +1,5 @@
 # Customer registration app
-This is a side project, used to learn more about Java. The back-end and the front-end have separate folders.
-
-#### Requirements (*Minimum*)
-- Java 21
-- Node.js 20
+This is a CRUD project that I used to improve my skils with Java and Spring Boot. There's two folders inside, the [backend](/backend/) and the [frontend](/frontend/).
 
 #### Back-end
 - Spring Boot
@@ -12,6 +8,19 @@ This is a side project, used to learn more about Java. The back-end and the fron
 #### Front-end
 - Vue.js 3
 - Vite
+- Zod
+
+#### Requirements (*Minimum*)
+- Java 21
+- Node.js 20
+
+### Features
+- ✔ Create customer
+- ✔ Delete customer
+- ✔ Update customer
+- ✔ View customer
+- ✔ Form validation
+- [✔] Front-end testing
 
 ## How to start
 
@@ -34,12 +43,12 @@ npm run dev
 ```
 
 ### 4. Run the back-end
-Open a new command line window and go to the back-end folder.
+Open a new command line window and go to the back-end folder. Inside of it there's a Maven wrapper that will run Spring Boot.
 ```
 cd .\backend\
 ```
 
-Run the project with Maven:
+Run:
 ```
 # If you're on Windows
 .\mvnw.cmd spring-boot:run
