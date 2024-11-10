@@ -1,4 +1,4 @@
-import type { GetCustomerResponse, GetCustomersResponse, RegisterCustomerRequest, RegisterCustomerResponse, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
+import type { GetCustomerResponse, GetAllCustomersResponse, RegisterCustomerRequest, RegisterCustomerResponse, UpdateCustomerRequest, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
 import { CustomerNotFoundError } from "../errors/customer-api/CustomerNotFoundError";
 import { ServerError } from "../errors/ServerError";
 import { customerApiErrorHandler } from "../errors/utils/customerApiErrorHandler";
@@ -56,7 +56,7 @@ export class CustomerApi {
         }
     }
 
-    static async getAllCustomers(): Promise<GetCustomersResponse> {
+    static async getAllCustomers(): Promise<GetAllCustomersResponse> {
         try {
             const url = 'http://localhost:8080/api/v1/customers';
 

@@ -11,7 +11,7 @@ export type GetCustomerResponse = CustomerType;
 export type RegisterCustomerRequest = Omit<CustomerType, 'id'>;
 export type RegisterCustomerResponse = CustomerType;
 
-export type GetCustomersResponse = CustomerType[];
+export type GetAllCustomersResponse = CustomerType[];
 
 export type UpdateCustomerRequest = CustomerType;
 export type UpdateCustomerResponse = CustomerType;
