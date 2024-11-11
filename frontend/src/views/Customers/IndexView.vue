@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { DeleteCustomerUseCase } from '@/application/use-cases/DeleteCustomerUseCase';
-import { GetAllCustomers } from '@/application/use-cases/GetAllCustomers';
+import { GetAllCustomersUseCase } from '@/application/use-cases/GetAllCustomersUseCase';
 import SimpleTable from '@/components/SimpleTable.vue';
 import { CustomerApiRepository } from '@/infrastructure/repositories/CustomerApiRepository';
-import type { GetAllCustomersResponse } from '@/types/CustomerApiResponse';
+import type { CustomerData } from '@/types/CustomerData';
 import { onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 const repository = new CustomerApiRepository();
-const getAllCustomersUseCase = new GetAllCustomers(repository);
+const getAllCustomersUseCase = new GetAllCustomersUseCase(repository);
 const deleteCustomerUseCase = new DeleteCustomerUseCase(repository);
-let customers = ref<GetAllCustomersResponse>([]);
+let customers = ref<CustomerData[]>([]);
 
 onMounted(async () => {
   customers.value = await getAllCustomersUseCase.execute();
@@ -34,7 +34,7 @@ const onClickDeleteCustomer = async (customerId: string) => {
         class="text-indigo-400 underline hover:text-indigo-600"
         >Registrar cliente</RouterLink>
     </div>
-    <SimpleTable @delete-customer="onClickDeleteCustomer" :table-data="customers as GetAllCustomersResponse" />
+    <SimpleTable @delete-customer="onClickDeleteCustomer" :table-data="customers as CustomerData[]" />
   </main>
 </template>
 

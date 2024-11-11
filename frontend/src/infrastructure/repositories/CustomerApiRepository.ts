@@ -12,7 +12,11 @@ export class CustomerApiRepository implements CustomerRepository {
         return await CustomerApi.getCustomer(id);
     }
     async getAllCustomers() {
-        return await CustomerApi.getAllCustomers();
+        const response = await CustomerApi.getAllCustomers();
+        return response.map(
+            customer => {
+                return new Customer(customer);
+        });
     }
     async delete(customerId: string) {
         await CustomerApi.delete(customerId);

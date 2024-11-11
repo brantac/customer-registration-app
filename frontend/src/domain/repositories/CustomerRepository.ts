@@ -5,7 +5,7 @@ import type { CustomerData } from "@/types/CustomerData";
 export interface CustomerRepository {
     register(newCustomer: CustomerData): Promise<Customer>;
     findById(id: string): Promise<GetCustomerResponse>;
-    getAllCustomers(): Promise<GetCustomersResponse>;
+    getAllCustomers(): Promise<Customer[]>;
     delete(customerId: string): Promise<void>;
     update(customerData: Customer): Promise<UpdateCustomerResponse>;
 }

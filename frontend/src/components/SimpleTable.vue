@@ -2,12 +2,12 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button as ShadcnButton} from '@/components/ui/button'
 import DeleteIcon from './icons/DeleteIcon.vue';
-import type { GetAllCustomersResponse } from '@/types/CustomerApiResponse';
 import EditIcon from './icons/EditIcon.vue';
 import { customRef } from 'vue';
+import type { CustomerData } from '@/types/CustomerData';
 
 defineProps<{
-  tableData?: GetAllCustomersResponse
+  tableData?: CustomerData[]
 }>();
 
 const emit = defineEmits(['deleteCustomer']);
