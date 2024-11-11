@@ -1,4 +1,4 @@
-import type { GetCustomerResponse, GetCustomersResponse, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
+import type { GetCustomerResponse, UpdateCustomerResponse } from "@/types/CustomerApiResponse";
 import type { Customer } from "../entities/Customer";
 import type { CustomerData } from "@/types/CustomerData";
 
