@@ -13,7 +13,8 @@ describe("Customer form", () => {
                     id: "das12341das",
                     phone: "1234"
                 },
-                isInputDisabled: true
+                isInputDisabled: true,
+                submitButtonText: "Registrar cliente"
             }
         });
 
@@ -44,7 +45,8 @@ describe("Customer form", () => {
                     id: "das12341das",
                     phone: "1234"
                 },
-                isInputDisabled: false
+                isInputDisabled: false,
+                submitButtonText: "Atualizar"
             }
         });
 
@@ -71,7 +73,8 @@ describe("Customer form", () => {
                     id: "",
                     phone: ""
                 },
-                isInputDisabled: false
+                isInputDisabled: false,
+                submitButtonText: "Registrar cliente"
             }
         });
 
@@ -107,7 +110,8 @@ describe("Customer form", () => {
                     id: "das12341das",
                     phone: "1234"
                 },
-                isInputDisabled: false
+                isInputDisabled: false,
+                submitButtonText: "Atualizar"
             }
         });
 
@@ -146,7 +150,8 @@ describe("Customer form", () => {
                     id: "",
                     phone: ""
                 },
-                isInputDisabled: false
+                isInputDisabled: false,
+                submitButtonText: "Registrar cliente"
             }
         });
 
@@ -187,6 +192,7 @@ describe("Customer form", () => {
                     phone: "",
                 },
                 isInputDisabled: true,
+                submitButtonText: "Registrar cliente"
             }
         });
 
