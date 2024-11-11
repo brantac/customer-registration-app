@@ -1,8 +1,12 @@
 <template>
     <div id="customer-view">
         <h1 class="text-xl font-medium">{{ customerData ? `${customerData.firstName} ${customerData.lastName}` : customerId }}</h1>
-        <Button @click="toggleInputDisabled">{{ isInputDisabled ? "Habilitar edição" : "Desabilitar edição" }}</Button>
-        <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :is-input-disabled="isInputDisabled"/>
+        <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :is-input-disabled="isInputDisabled" submit-button-text="Atualizar">
+            <template #optionalButton>
+                <Button type="button"
+                    @click="toggleInputDisabled">{{ isInputDisabled ? "Habilitar edição" : "Desabilitar edição" }}</Button>
+            </template>
+        </CustomerForm>
     </div>
 </template>
 

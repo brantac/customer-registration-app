@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onSubmit" class="h-full grid grid-cols-2 justify-center content-center gap-4">
+    <form @submit.prevent="onSubmit" class="h-full grid md:grid-cols-2 justify-center content-center gap-4">
         <template v-for="(value, key) in formValues" :key="key">
             <div v-if="key !== 'id'" class="form-field relative w-full flex flex-col">
                 <label 
@@ -16,7 +16,8 @@
                 <span :data-test-error="key" class="text-red-500 text-sm">{{ errors[key] }}</span>
             </div>
         </template>
-        <Button class="col-start-1 col-end-2" type="submit">Registrar</Button>
+        <slot name="optionalButton"></slot>
+        <Button :disabled="Object.keys(errors).length > 0" class="bg-yellow-500 hover:bg-yellow-400" type="submit">{{ submitButtonText }}</Button>
     </form>
 </template>
 
@@ -59,7 +60,8 @@ const formDetails  = ref<FormDetails>({
 // Props and Emits
 const props = defineProps<{
     initialCustomerData: CustomerFormType,
-    isInputDisabled: boolean
+    isInputDisabled: boolean,
+    submitButtonText: string,
  }>();
 
  const emit = defineEmits<{

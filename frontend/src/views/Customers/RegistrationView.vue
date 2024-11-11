@@ -1,6 +1,6 @@
 <template>
     <div class="customer-registration">
-        <CustomerForm :initial-customer-data="customerData" @submitForm="registerCustomer" :is-input-disabled="false" />
+        <CustomerForm :initial-customer-data="customerData" @submitForm="registerCustomer" :is-input-disabled="false" submit-button-text="Registrar" />
     </div>
 </template>
 
