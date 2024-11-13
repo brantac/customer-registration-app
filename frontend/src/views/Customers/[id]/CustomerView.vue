@@ -37,7 +37,6 @@ onMounted(async () => {
 });
 
 const updateCustomer = async (values: any) => {
-    toggleMode();
     const updateCustomerUseCase = new UpdateCustomerUseCase(repository);
     try {
         const response = await updateCustomerUseCase.execute({
@@ -48,6 +47,7 @@ const updateCustomer = async (values: any) => {
             email: values.email
         });
         customerData.value = response;
+        toggleMode();
     } catch (error: any) {
         throw new Error("Erro ao enviar alterações dos dados do cliente");
     }
