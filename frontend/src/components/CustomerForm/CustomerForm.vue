@@ -17,16 +17,19 @@
             </div>
         </template>
         <slot name="optionalButton"></slot>
-        <Button :disabled="Object.keys(errors).length > 0" class="bg-yellow-500 hover:bg-yellow-400" type="submit">{{ submitButtonText }}</Button>
+        <Button
+            :disabled="Object.keys(errors).length > 0 || isInputDisabled"
+            class="bg-yellow-500 hover:bg-yellow-400" type="submit">{{ submitButtonText }}</Button>
     </form>
 </template>
 
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { ref, toRefs } from "vue";
+import { computed, ref, toRefs } from "vue";
 import type { CustomerFormType } from "@/validation/CustomerSchema";
 import { validateForm } from "@/validation/validate-form";
 import { validateField } from "@/validation/validate-field";
+import type { FormMode } from "@/types/FormMode";
 
 interface FieldDetails {
     placeholder: string;
@@ -37,6 +40,18 @@ type FormDetails = {
     [K in keyof CustomerFormType]: FieldDetails
 }
 
+// Props and Emits
+const props = defineProps<{
+    initialCustomerData?: CustomerFormType,
+    submitButtonText: string,
+    mode: FormMode
+ }>();
+
+ const emit = defineEmits<{
+    submitForm: [value: CustomerFormType],
+}>();
+
+// Variables
 const errors = ref<Record<string, string>>({});
 const formDetails  = ref<FormDetails>({
     firstName: {
@@ -57,21 +72,17 @@ const formDetails  = ref<FormDetails>({
     },
 });
 
-// Props and Emits
-const props = defineProps<{
-    initialCustomerData: CustomerFormType,
-    isInputDisabled: boolean,
-    submitButtonText: string,
- }>();
-
- const emit = defineEmits<{
-    submitForm: [value: CustomerFormType],
-}>();
-
 // Turn each prop into a Ref, destructure initialCustomerData,
 // and create a local copy of it
 const { initialCustomerData } = toRefs(props);
-const formValues = ref({...initialCustomerData.value});
+const formValues = ref({
+    id: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    ...initialCustomerData.value
+});
 
 const onSubmit = () => {
     if (isFormValid()) {
@@ -101,4 +112,8 @@ const isFormValid = () => {
         return false;
     }
 };
+
+const isInputDisabled = computed(() => {
+    return props.mode === "view" ? true : false;
+});
 </script>

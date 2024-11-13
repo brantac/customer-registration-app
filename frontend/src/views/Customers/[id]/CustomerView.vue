@@ -1,10 +1,10 @@
 <template>
     <div id="customer-view">
         <h1 class="text-xl font-medium">{{ customerData ? `${customerData.firstName} ${customerData.lastName}` : customerId }}</h1>
-        <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :is-input-disabled="isInputDisabled" submit-button-text="Atualizar">
+        <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :mode="mode" submit-button-text="Atualizar">
             <template #optionalButton>
                 <Button type="button"
-                    @click="toggleInputDisabled">{{ isInputDisabled ? "Habilitar edição" : "Desabilitar edição" }}</Button>
+                    @click="toggleMode">{{ mode === "view" ? "Editar" : "Cancelar edição" }}</Button>
             </template>
         </CustomerForm>
     </div>
@@ -19,11 +19,12 @@ import { UpdateCustomerUseCase } from '@/application/use-cases/UpdateCustomerUse
 import { GetCustomerUseCase } from '@/application/use-cases/GetCustomerUseCase';
 import { Button } from '@/components/ui/button';
 import type { CustomerData } from '@/types/CustomerData';
+import type { FormMode } from '@/types/FormMode';
 
 const route = useRoute();
 const customerId = route.params.id as string;
 const customerData = ref<CustomerData | null>(null);
-const isInputDisabled = ref(true);
+const mode = ref<FormMode>("view");
 
 // Initialize Customer Repository
 const repository = new CustomerApiRepository();
@@ -36,7 +37,7 @@ onMounted(async () => {
 });
 
 const updateCustomer = async (values: any) => {
-    toggleInputDisabled();
+    toggleMode();
     const updateCustomerUseCase = new UpdateCustomerUseCase(repository);
     try {
         const response = await updateCustomerUseCase.execute({
@@ -52,7 +53,8 @@ const updateCustomer = async (values: any) => {
     }
 };
 
-const toggleInputDisabled = () => {
-    isInputDisabled.value = !isInputDisabled.value;
+const toggleMode = () => {
+    if (mode.value === "view") mode.value = "update";
+    else if (mode.value === "update") mode.value = "view";
 }
 </script>

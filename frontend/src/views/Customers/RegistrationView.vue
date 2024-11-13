@@ -1,6 +1,6 @@
 <template>
     <div class="customer-registration">
-        <CustomerForm :initial-customer-data="customerData" @submitForm="registerCustomer" :is-input-disabled="false" submit-button-text="Registrar" />
+        <CustomerForm @submitForm="registerCustomer" mode="create" submit-button-text="Registrar" />
     </div>
 </template>
 
@@ -12,13 +12,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
-const customerData = ref({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-});
 
 const registerCustomer = async (values: any) => {
     const customerRepository = new CustomerApiRepository();
