@@ -3,7 +3,7 @@
         <h1 class="text-xl font-medium">{{ customerData ? `${customerData.firstName} ${customerData.lastName}` : customerId }}</h1>
         <CustomerForm v-if="customerData" :initial-customer-data="customerData" @submit-form="updateCustomer" :mode="mode" submit-button-text="Atualizar">
             <template #optionalButton>
-                <Button type="button"
+                <Button id="toggle-edit-button" type="button"
                     @click="toggleMode">{{ mode === "view" ? "Editar" : "Cancelar edição" }}</Button>
             </template>
         </CustomerForm>
