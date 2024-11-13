@@ -186,6 +186,37 @@ describe("Customer form", () => {
             expect(wrapper.emitted()).not.toHaveProperty("submitForm");
         });
 
-        test.todo("block update when edit is disabled");
+        test("block update when mode switches from update to view", async () => {
+            const wrapper = mount(CustomerForm, {
+                props: {
+                    initialCustomerData: {
+                        id: '123',
+                        firstName: 'joao',
+                        lastName: 'carlos',
+                        email: 'joao@exemplo.com',
+                        phone: '123',
+                    },
+                    mode: 'view',
+                    submitButtonText: 'Atualizar'
+                },
+            });
+
+            const lastName = wrapper.find("input[name='lastName']");
+
+            expect(wrapper.props().mode).toBe("view");
+            await wrapper.setProps({mode: 'update'})
+            expect(wrapper.props().mode).toBe("update");
+
+            lastName.setValue("carlos marinho");
+
+            await wrapper.setProps({mode: 'view'})
+            expect(wrapper.props().mode).toBe("view");
+
+            expect(lastName.element.value).toBe("carlos");
+
+            await wrapper.find('form').trigger('submit.prevent');
+
+            expect(wrapper.emitted()).not.toHaveProperty('submitForm');
+        });
     });
 });

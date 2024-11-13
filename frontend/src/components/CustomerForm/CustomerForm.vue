@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { computed, ref, toRefs } from "vue";
+import { computed, ref, toRefs, watch } from "vue";
 import type { CustomerFormType } from "@/validation/CustomerSchema";
 import { validateForm } from "@/validation/validate-form";
 import { validateField } from "@/validation/validate-field";
@@ -84,8 +84,32 @@ const formValues = ref({
     ...initialCustomerData.value
 });
 
+// Reset initial values if user switch from 'update' to 'view' mode
+watch(() => props.mode, (newValue) => resetInitialValues(newValue));
+
+function resetInitialValues (newValue: FormMode): void {
+    if (newValue === 'view') {
+        formValues.value = {
+            id: '',
+            firstName: '',
+            lastName: '',
+            phone: '',
+            email: '',
+            ...initialCustomerData.value
+        };
+
+        // reset errors
+        const errorKeys = Object.keys(errors.value);
+        if (errorKeys.length > 0) {
+            errorKeys.forEach(val => {
+                delete errors.value[val];
+            });
+        }
+    }
+}
+
 const onSubmit = () => {
-    if (isFormValid()) {
+    if (isFormValid() && canSubmit()) {
         emit('submitForm', formValues.value);
     }
 };
@@ -114,6 +138,8 @@ const isFormValid = () => {
 };
 
 const isInputDisabled = computed(() => {
-    return props.mode === "view" ? true : false;
+    return props.mode === "view";
 });
+
+const canSubmit = () => !isInputDisabled.value;
 </script>
